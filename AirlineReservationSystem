@@ -1,0 +1,145 @@
+import java.util.*;
+class Flight {
+    String FlightNo;
+    String Dest;
+    int Cap;
+    ArrayList<String> passengers = new ArrayList<>();
+
+    public Flight(String FlightNo, String Dest, int Cap) {
+        this.FlightNo = FlightNo;
+        this.Dest = Dest;
+        this.Cap = Cap;
+    }
+
+    public String getFlightNumber() {
+        return FlightNo;
+    }
+
+    public String getDestination() {
+        return Dest;
+    }
+
+    public int getCapacity() {
+        return Cap;
+    }
+
+    public ArrayList<String> getPassengers() {
+        return passengers;
+    }
+
+    public boolean bookTicket(String passengerName) {
+        if (passengers.size() < Cap) {
+            passengers.add(passengerName);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean cancelTicket(String passengerName) {
+        return passengers.remove(passengerName);
+    }
+
+    public boolean isAvailable() {
+        return passengers.size() < Cap;
+    }
+}
+public class AirlineReservationSystem{
+    static ArrayList<Flight> flights=new ArrayList<>();
+    static Scanner in=new Scanner(System.in);
+    public static void initializeFlights() {
+        flights.add(new Flight("NY123", "New York", 100));
+        flights.add(new Flight("BA456", "Bangalore", 200));
+        flights.add(new Flight("DU789", "Dubai", 150));
+    }
+    public static void main(String[] args) {
+        initializeFlights();
+        while (true) {
+            System.out.println("Airline Reservation System");
+            System.out.println("1. View All Flights");
+            System.out.println("2. Book Ticket");
+            System.out.println("3. Cancel Ticket");
+            System.out.println("4. Exit");
+            System.out.print("Choose an option: ");
+            int ch = in.nextInt();
+            in.nextLine(); // Consume newline
+
+            switch (ch) {
+                case 1:
+                    viewAllFlights();
+                    break;
+                case 2:
+                    bookTicket();
+                    break;
+                case 3:
+                    cancelTicket();
+                    break;
+                case 4:
+                    System.out.println("Exiting...");
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+    private static void viewAllFlights() {
+        System.out.println("Available Flights:");
+        for (Flight flight : flights) {
+            System.out.println("Flight Number: " + flight.getFlightNumber() +
+                    ", Destination: " + flight.getDestination() +
+                    ", Capacity: " + flight.getCapacity() +
+                    ", Available Seats: " + (flight.getCapacity() - flight.getPassengers().size()));
+        }
+    }
+
+    private static void bookTicket() {
+        System.out.print("Enter Flight Number: ");
+        String flightNumber = in.nextLine();
+        Flight flight = findFlight(flightNumber);
+
+        if (flight == null) {
+            System.out.println("Flight not found.");
+            return;
+        }
+
+        if (!flight.isAvailable()) {
+            System.out.println("No available seats.");
+            return;
+        }
+
+        System.out.print("Enter Passenger Name: ");
+        String passengerName = in.nextLine();
+        if (flight.bookTicket(passengerName)) {
+            System.out.println("Ticket booked successfully.");
+        } else {
+            System.out.println("Booking failed.");
+        }
+    }
+
+    private static void cancelTicket() {
+        System.out.print("Enter Flight Number: ");
+        String flightNumber = in.nextLine();
+        Flight flight = findFlight(flightNumber);
+
+        if (flight == null) {
+            System.out.println("Flight not found.");
+            return;
+        }
+
+        System.out.print("Enter Passenger Name: ");
+        String passengerName = in.nextLine();
+        if (flight.cancelTicket(passengerName)) {
+            System.out.println("Ticket cancelled successfully.");
+        } else {
+            System.out.println("Cancellation failed.");
+        }
+    }
+
+    private static Flight findFlight(String flightNumber) {
+        for (Flight flight : flights) {
+            if (flight.getFlightNumber().equalsIgnoreCase(flightNumber)) {
+                return flight;
+            }
+        }
+        return null;
+    }
+}
