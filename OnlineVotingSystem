@@ -1,0 +1,90 @@
+import java.util.*;
+import java.lang.*;
+public class OnlineVotingSystem {
+    static Scanner in=new Scanner(System.in);
+    static HashMap <String,Boolean>Voters = new HashMap<>();
+    static HashMap <String,Integer>Candidates = new HashMap<>();
+
+    public static void VoterList()
+    {
+        Voters.put("1",false);
+        Voters.put("2",false);
+        Voters.put("3",false);
+        Voters.put("4",false);
+        Voters.put("5",false);
+    }
+    public static void CandidatesList()
+    {
+        Candidates.put("C1",0);
+        Candidates.put("C2",0);
+        Candidates.put("C3",0);
+        Candidates.put("C4",0);
+        Candidates.put("C5",0);
+    }
+    public static void main(String[] args) {
+        VoterList();
+        CandidatesList();
+
+        while(true)
+        {
+            System.out.println("Time to cast your vote");
+            System.out.println("Enter Voter Id : ");
+            String Id=in.nextLine();
+
+            //only officials can end the voting after everyone has voted
+            if(Id.equalsIgnoreCase("end")) {
+                /*
+                this will be executed only when "end" is entered and
+                only officials know the keyword to end the voting at
+                the end of the day
+                 */
+                break;
+            }
+            if(Id.equalsIgnoreCase("result"))
+            {
+                /*
+                this if statement is executed when 'result' keyword is entered
+                during the time of counting and to get the count, the officials
+                need to enter the password
+                 */
+                System.out.println("Enter password to display result");
+                int pass=in.nextInt();
+                if(pass==20241234)
+                {
+                    for (Map.Entry<String, Integer> entry : Candidates.entrySet()) {
+                        System.out.println(entry.getKey() + ": " + entry.getValue() + " votes");
+                    }
+                }
+                else {
+                    System.out.println("Wrong Password");
+                    continue;
+                }
+            }
+            if(!Voters.containsKey(Id)) {
+                System.out.println("Invalid Voter ID. Please try again.");
+                continue;
+            }
+            if(Voters.get(Id)){
+                System.out.println("Voting Done!!");
+                continue;
+            }
+            System.out.println("Candidates:");
+            for (String candidate : Candidates.keySet()) {
+                System.out.println(candidate);
+            }
+            System.out.print("Enter Candidate Id to vote: ");
+            String candidateName = in.nextLine();
+
+            if (!Candidates.containsKey(candidateName)) {
+                System.out.println("Invalid Candidate Id. Please try again.");
+                continue;
+            }
+
+            Candidates.put(candidateName, Candidates.get(candidateName) + 1);
+            Voters.put(Id, true);
+            System.out.println("Voted for " + candidateName);
+        }
+    }
+}
+
+
