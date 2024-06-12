@@ -1,0 +1,51 @@
+import javax.swing.*;
+import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class DigitalClock extends JFrame {
+    private JLabel clockLabel;
+    private JLabel dateLabel;
+
+    public DigitalClock() {
+        setTitle("Digital Clock");
+        setSize(400, 250);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+        getContentPane().setBackground(Color.black);
+
+        clockLabel = new JLabel();
+        clockLabel.setFont(new Font("Arial", Font.BOLD, 50));
+        clockLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        clockLabel.setForeground(Color.PINK);
+        add(clockLabel, BorderLayout.CENTER);
+
+        dateLabel = new JLabel();
+        dateLabel.setFont(new Font("Arial", Font.BOLD, 30));
+        dateLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        dateLabel.setForeground(Color.PINK);
+        add(dateLabel, BorderLayout.SOUTH);
+
+        Timer timer = new Timer(1000, e -> updateClock());
+        timer.start();
+    }
+
+    private void updateClock() {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy");
+        Date now = new Date();
+        String currentTime = timeFormat.format(now);
+        String currentDate = dateFormat.format(now);
+
+        clockLabel.setText(currentTime);
+        dateLabel.setText(currentDate);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            DigitalClock clock = new DigitalClock();
+            clock.setVisible(true);
+        });
+    }
+}
